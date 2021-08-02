@@ -1,0 +1,17 @@
+{
+    "presets": ["@babel/preset-env", "@babel/preset-typescript", "@babel/react"],
+    "plugins": [
+        "@babel/plugin-syntax-object-rest-spread",
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-transform-runtime"
+    ],
+    "env": {
+        "production-esm": {
+            "presets": [
+                ["@babel/preset-env", { "modules": false }],
+                "@babel/preset-typescript",
+                "@babel/react"
+            ]
+        }
+    }
+}
