@@ -52,14 +52,12 @@ export const InfoMarker = ({
                     id={id}
                     map={map}
                     options={options}
+                    infowindow={infowindow}
                     events={{
                         ...events,
                         click: /* istanbul ignore next */ (e, ctx) => {
                             if (events?.click) {
-                                events.click(e, {
-                                    ...ctx,
-                                    infowindow,
-                                });
+                                events.click(e, ctx);
                             }
 
                             // close all infowindows first

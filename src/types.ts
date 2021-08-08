@@ -94,6 +94,7 @@ export interface MarkerProps {
     map?: google.maps.Map;
     options?: google.maps.MarkerOptions;
     events?: GoogleMapObjectEventBinders;
+    infowindow?: google.maps.InfoWindow;
     onMount?: (context: MapObjectContext) => void;
 }
 /**

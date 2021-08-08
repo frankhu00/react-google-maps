@@ -3,7 +3,14 @@ import { v4 as uuid } from 'uuid';
 import { MarkerProps, MarkerEventHandler, MapObjectContext } from './types';
 import { MapInstanceSetter, dummyMapInstanceSetter } from './MapProvider';
 
-export const Marker = ({ id = uuid(), map, options, events, onMount }: MarkerProps): null => {
+export const Marker = ({
+    id = uuid(),
+    map,
+    options,
+    events,
+    onMount,
+    infowindow,
+}: MarkerProps): null => {
     const marker = google ? new google.maps.Marker(options) : null;
     let boundedEventListeners: google.maps.MapsEventListener[] = [];
 
@@ -20,6 +27,7 @@ export const Marker = ({ id = uuid(), map, options, events, onMount }: MarkerPro
                 map,
                 marker,
                 id,
+                infowindow,
             };
             onMount?.(context);
             if (events) {
