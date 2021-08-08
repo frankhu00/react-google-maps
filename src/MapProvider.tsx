@@ -5,6 +5,7 @@ const MapInstanceContext = createContext<UseGoogleMapContext>({
     map: null,
     markers: {},
     infowindows: {},
+    polylines: {},
 });
 
 export const dummyMapInstanceSetter: IMapInstanceSetter = {
@@ -14,6 +15,10 @@ export const dummyMapInstanceSetter: IMapInstanceSetter = {
         remove: () => {},
     },
     infowindowInstances: {
+        add: () => {},
+        remove: () => {},
+    },
+    polylineInstances: {
         add: () => {},
         remove: () => {},
     },
@@ -29,6 +34,9 @@ const MapProvider = ({ children }: { children: JSX.Element | JSX.Element[] }): J
     const [infowindowHashMap, setInfowindowHashMap] = useState<
         Record<string, google.maps.InfoWindow>
     >({});
+    const [polylineHashMap, setPolylineHashMap] = useState<Record<string, google.maps.Polyline>>(
+        {}
+    );
 
     const markerInstances: InstanceUpdator<google.maps.Marker> = {
         add: /* istanbul ignore next */ (id, marker) => {
@@ -62,15 +70,32 @@ const MapProvider = ({ children }: { children: JSX.Element | JSX.Element[] }): J
         },
     };
 
+    const polylineInstances: InstanceUpdator<google.maps.Polyline> = {
+        add: /* istanbul ignore next */ (id, polyline) => {
+            setPolylineHashMap((prev) => ({
+                ...prev,
+                [id]: polyline,
+            }));
+        },
+        remove: /* istanbul ignore next */ (id) => {
+            setPolylineHashMap((prev) => {
+                const clone = { ...prev };
+                delete clone[id];
+                return clone;
+            });
+        },
+    };
+
     return (
         <MapInstanceSetter.Provider
-            value={{ setMapInstance, markerInstances, infowindowInstances }}
+            value={{ setMapInstance, markerInstances, infowindowInstances, polylineInstances }}
         >
             <MapInstanceContext.Provider
                 value={{
                     map: mapInstance,
                     markers: markerHashMap,
                     infowindows: infowindowHashMap,
+                    polylines: polylineHashMap,
                 }}
             >
                 {children}

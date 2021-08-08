@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { Space, Spin, Alert, Button, Typography, message } from 'antd';
 import 'antd/dist/antd.css';
 
-import { GAPILoader, Map, InfoMarker } from './src';
+import { GAPILoader, Map, InfoMarker, InfoPolyline, Direction } from './src';
 
 const flexColumn: React.CSSProperties = { display: 'flex', flexDirection: 'column' };
 
@@ -107,6 +107,32 @@ const Demo = () => {
                             )}
                         </InfoMarker>
                     ) : null}
+                    {userLocation ? (
+                        <InfoPolyline
+                            options={{
+                                path: [
+                                    {
+                                        lat: userLocation.coords.latitude,
+                                        lng: userLocation.coords.longitude,
+                                    },
+                                    {
+                                        lat: userLocation.coords.latitude + 2,
+                                        lng: userLocation.coords.longitude + 2,
+                                    },
+                                ],
+                            }}
+                        >
+                            <div>haha</div>
+                        </InfoPolyline>
+                    ) : null}
+
+                    <Direction
+                        request={{
+                            origin: { lat: 34.0522342, lng: -118.2436849 },
+                            destination: { lat: 37.7749295, lng: -122.4194155 },
+                            travelMode: 'DRIVING' as google.maps.TravelMode.DRIVING,
+                        }}
+                    />
                 </Map>
             </GAPILoader>
         </main>

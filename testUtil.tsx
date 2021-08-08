@@ -32,6 +32,13 @@ class mockPlacesService {
     getDetails = getDetailsMock;
 }
 
+const polylineSetMapMock = jest.fn();
+const polylineAddListenerMock = jest.fn();
+class mockPolylineClass {
+    setMap = polylineSetMapMock;
+    addListener = polylineAddListenerMock;
+}
+
 const mockGoogleAPI = {
     maps: {
         Marker: mockMarkerClass,
@@ -45,6 +52,7 @@ const mockGoogleAPI = {
             AutocompleteService: mockAutoCompleteService,
             AutocompleteSessionToken: class {},
         },
+        Polyline: mockPolylineClass,
     },
 };
 /** End mocking window.google */
@@ -60,4 +68,6 @@ export {
     mapSetCenterMock,
     getPlacePredictionsMock,
     getDetailsMock,
+    polylineSetMapMock,
+    polylineAddListenerMock,
 };

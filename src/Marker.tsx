@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import { v4 as uuid } from 'uuid';
-import { MarkerProps, MarkerEventHandler, MapObjectContext } from './types';
+import { MarkerProps, MapEventHandler, MapObjectContext } from './types';
 import { MapInstanceSetter, dummyMapInstanceSetter } from './MapProvider';
 
 export const Marker = ({
@@ -32,7 +32,7 @@ export const Marker = ({
             onMount?.(context);
             if (events) {
                 boundedEventListeners = Object.entries(events).map(
-                    (event: [string, MarkerEventHandler]) =>
+                    (event: [string, MapEventHandler]) =>
                         marker.addListener(
                             event[0],
                             /* istanbul ignore next */

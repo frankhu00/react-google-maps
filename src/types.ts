@@ -53,12 +53,14 @@ export interface IMapInstanceSetter {
     setMapInstance: Dispatch<google.maps.Map>;
     markerInstances: InstanceUpdator<google.maps.Marker>;
     infowindowInstances: InstanceUpdator<google.maps.InfoWindow>;
+    polylineInstances: InstanceUpdator<google.maps.Polyline>;
 }
 
 export interface UseGoogleMapContext {
     map: google.maps.Map | null;
     markers: Record<string, google.maps.Marker>;
     infowindows: Record<string, google.maps.InfoWindow>;
+    polylines: Record<string, google.maps.Polyline>;
 }
 
 // MapObject Context (for Marker and InfoWindow)
@@ -67,18 +69,23 @@ export interface MapObjectContext {
     marker?: google.maps.Marker;
     infowindow?: google.maps.InfoWindow;
     map?: google.maps.Map;
+    polyline?: google.maps.Polyline;
+    directionsRenderer?: google.maps.DirectionsRenderer;
+}
+
+interface MapObjectProps {
+    id?: string;
+    map?: google.maps.Map;
+    infowindow?: google.maps.InfoWindow;
 }
 
 /**
  * Marker types
  */
 
-export type MarkerEventHandler = (
-    event: google.maps.MapMouseEvent,
-    context: MapObjectContext
-) => void;
+export type MapEventHandler = (event: google.maps.MapMouseEvent, context: MapObjectContext) => void;
 
-type GoogleMapObjectEventBinders = {
+export type GoogleMapObjectEventBinders = {
     [key in
         | 'click'
         | 'dblclick'
@@ -87,14 +94,11 @@ type GoogleMapObjectEventBinders = {
         | 'mouseout'
         | 'mouseover'
         | 'mouseup'
-        | 'recenter']?: MarkerEventHandler;
+        | 'recenter']?: MapEventHandler;
 };
-export interface MarkerProps {
-    id?: string;
-    map?: google.maps.Map;
+export interface MarkerProps extends MapObjectProps {
     options?: google.maps.MarkerOptions;
     events?: GoogleMapObjectEventBinders;
-    infowindow?: google.maps.InfoWindow;
     onMount?: (context: MapObjectContext) => void;
 }
 /**
@@ -106,9 +110,7 @@ export interface MarkerProps {
  */
 type IWRenderPropFn = (ctx: MapObjectContext) => JSX.Element;
 
-export interface InfoWindowProps {
-    id?: string;
-    map?: google.maps.Map;
+export interface InfoWindowProps extends Pick<MapObjectProps, 'id' | 'map'> {
     anchor?: google.maps.MVCObject;
     shouldFocus?: boolean;
     showOnMount?: boolean;
@@ -179,3 +181,18 @@ export interface PlaceDetailsResponse {
 }
 
 /** End Autocomplete types */
+
+export interface PolylineProps extends MapObjectProps {
+    options?: google.maps.PolylineOptions;
+    onMount?: (context: MapObjectContext) => void;
+    events?: GoogleMapObjectEventBinders;
+}
+
+export interface InfoPolylineProps extends PolylineProps {
+    infowindowOpts?: google.maps.InfoWindowOptions;
+    children: IWRenderPropFn | JSX.Element;
+    shouldFocus?: boolean;
+    showOnMount?: boolean;
+    anchor?: google.maps.MVCObject;
+    onInfowindowMount?: (context: MapObjectContext) => void;
+}
