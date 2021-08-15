@@ -1,4 +1,4 @@
-import { Dispatch } from 'react';
+import React, { Dispatch } from 'react';
 
 export interface GoogleApiOptions {
     libraries?: string[];
@@ -121,6 +121,7 @@ export interface InfoWindowProps extends Pick<MapObjectProps, 'id' | 'map'> {
     content: IWRenderPropFn | JSX.Element;
     children?: IWRenderPropFn | JSX.Element;
     onMount?: (context: MapObjectContext) => void;
+    Provider?: React.FC;
 }
 /**
  * End InfoWindow types

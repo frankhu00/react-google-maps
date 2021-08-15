@@ -5,16 +5,16 @@ const PinError = ({ fill = '#f5222d' }: { fill?: string }) => (
         <circle cx="8" cy="5.667" r="3" fill="#fff" />
         <path
             fill={fill}
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M2.667 5.958c0 3.97 5.355 9.828 5.355 9.828s5.355-5.858 5.355-9.827c0-2.926-2.395-5.292-5.355-5.292-2.96 0-5.355 2.366-5.355 5.292zm5.355 2.344c-1.52 0-2.754-1.219-2.754-2.721 0-1.503 1.233-2.722 2.754-2.722 1.52 0 2.754 1.22 2.754 2.722S9.542 8.302 8.022 8.302z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
         />
         <mask id="e02dmhwr2a" width="12" height="16" x="2" y="0" maskUnits="userSpaceOnUse">
             <path
                 fill="#fff"
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M2.667 5.958c0 3.97 5.355 9.828 5.355 9.828s5.355-5.858 5.355-9.827c0-2.926-2.395-5.292-5.355-5.292-2.96 0-5.355 2.366-5.355 5.292zm5.355 2.344c-1.52 0-2.754-1.219-2.754-2.721 0-1.503 1.233-2.722 2.754-2.722 1.52 0 2.754 1.22 2.754 2.722S9.542 8.302 8.022 8.302z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
             />
         </mask>
     </svg>

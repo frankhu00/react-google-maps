@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useEffect, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { v4 as uuid } from 'uuid';
@@ -16,6 +16,7 @@ export const InfoWindow = ({
     content,
     onMount,
     children,
+    Provider = Fragment,
 }: InfoWindowProps): JSX.Element | null => {
     const infowindow = google ? new google.maps.InfoWindow(options) : null;
 
@@ -33,9 +34,8 @@ export const InfoWindow = ({
             };
             const container = document.createElement('div');
 
-            /* Will need to add more providers if the application uses more than just react-query */
             ReactDOM.render(
-                <>{typeof content === 'function' ? content(context) : content}</>,
+                <Provider>{typeof content === 'function' ? content(context) : content}</Provider>,
                 container
             );
             onMount?.(context);

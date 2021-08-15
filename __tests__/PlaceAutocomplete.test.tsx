@@ -1,16 +1,14 @@
+import React from 'react';
 import { screen, render, cleanup, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { i18nextInstance } from '../testUtil';
 import { PlaceAutocomplete } from '../src/PlaceAutocomplete';
 import { useGoogleAutocomplete } from '../src/useGoogleAutocomplete';
 
 // mocks
-jest.mock('../useGoogleAutocomplete', () => ({
+jest.mock('../src/useGoogleAutocomplete', () => ({
     useGoogleAutocomplete: jest.fn(() => {}),
 }));
-
-i18nextInstance();
 
 /**
  * Couldn't get antd Autocomplete to select an option by trigger user click event
