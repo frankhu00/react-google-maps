@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { Space, Spin, Alert, Button, Typography, message } from 'antd';
 import 'antd/dist/antd.css';
 
-import { GAPILoader, Map, InfoMarker, InfoPolyline, Direction } from './src';
+import { GAPILoader, Map, InfoMarker, InfoPolyline, Direction, PlaceAutocomplete } from './src';
 
 const flexColumn: React.CSSProperties = { display: 'flex', flexDirection: 'column' };
 
@@ -22,8 +22,9 @@ const Demo = () => {
             }}
         >
             <h1>Google Map</h1>
+            <PlaceAutocomplete apiKey="AIzaSyAgQKloSXnjAlNU_cFUdrHsRZ6Dz8IHv6w" />
             <GAPILoader
-                apiKey="AIzaSyBQ2CaJz4PYGeJmJFAhaYDj-H_nWnuDQdc"
+                apiKey="AIzaSyAgQKloSXnjAlNU_cFUdrHsRZ6Dz8IHv6w"
                 LoadingView={() => (
                     <Spin spinning={true}>
                         <Alert
@@ -60,6 +61,9 @@ const Demo = () => {
                             duration: 2,
                             key: userLocationMessageKey,
                         });
+                    }}
+                    onMount={(map) => {
+                        console.log(map);
                     }}
                 >
                     {userLocation ? (

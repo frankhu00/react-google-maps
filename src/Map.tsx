@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
 
 import geoService from './geo.service';
 import { MapProps } from './types';
@@ -25,10 +25,13 @@ const Map = ({
     options,
     children,
     userGeolocation = true,
+    centerToUserLocation = true,
     onUserGeolocationLoading,
     onUserGeolocationSuccess,
     onUserGeolocationFailed,
     onUserGeolocationSettled,
+    onMount,
+    onUnmount,
     ...props
 }: MapProps): JSX.Element | null => {
     /* istanbul ignore next */
@@ -51,10 +54,12 @@ const Map = ({
                     const geo = await geoService.getPosition();
                     if (geo) {
                         onUserGeolocationSuccess?.(geo);
-                        map.setCenter({
-                            lat: geo.coords.latitude,
-                            lng: geo.coords.longitude,
-                        });
+                        if (centerToUserLocation) {
+                            map.setCenter({
+                                lat: geo.coords.latitude,
+                                lng: geo.coords.longitude,
+                            });
+                        }
                     } else {
                         onUserGeolocationFailed?.();
                     }
@@ -67,6 +72,16 @@ const Map = ({
             }
         }
     }, []);
+
+    useEffect(() => {
+        if (mapObj) {
+            onMount?.(mapObj);
+        }
+
+        return () => {
+            onUnmount?.(mapObj);
+        };
+    }, [mapObj]);
 
     const renderChildren = () => {
         if (!children) {

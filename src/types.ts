@@ -33,11 +33,14 @@ export interface GAPILoaderProps {
 
 export interface MapProps {
     options?: google.maps.MapOptions;
+    centerToUserLocation?: boolean;
     userGeolocation?: boolean;
     onUserGeolocationLoading?: () => void;
     onUserGeolocationSuccess?: (position: GeolocationPosition) => void;
     onUserGeolocationFailed?: () => void;
     onUserGeolocationSettled?: () => void;
+    onMount?: (map: google.maps.Map) => void;
+    onUnmount?: (map?: google.maps.Map) => void;
     children?: JSX.Element | JSX.Element[] | (JSX.Element[] | JSX.Element | null)[] | null;
     [key: string]: any;
 }
@@ -134,6 +137,13 @@ export interface InfoMarkerProps extends MarkerProps {
 }
 
 /** AutoComplete types */
+export interface PlaceAutocompleteDictionary {
+    loading?: string;
+    noService?: string;
+    placeholder?: string;
+    serviceError?: string;
+}
+
 export interface PlaceAutocompleteProps {
     apiKey?: string;
     map?: google.maps.Map | HTMLDivElement;
@@ -143,6 +153,10 @@ export interface PlaceAutocompleteProps {
     onSelectFailed?: (status: google.maps.places.PlacesServiceStatus) => void;
     onClear?: () => void;
     onBlur?: () => void;
+    dictionary?: PlaceAutocompleteDictionary;
+    pinFill?: string;
+    pinActiveFill?: string;
+    pinErrorFill?: string;
     [key: string]: any;
 }
 
@@ -156,6 +170,14 @@ export interface AutocompleteInputState {
     value: string;
     loading: boolean;
     valid: boolean; // only true when user picks from the dropdown
+}
+
+export interface MapPinProps {
+    active: boolean;
+    valid: boolean;
+    pinFill?: string;
+    pinActiveFill?: string;
+    pinErrorFill?: string;
 }
 
 // for useGoogleAutocomplete

@@ -1,9 +1,9 @@
 import { screen, render, cleanup, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { i18nextInstance } from '~testUtil';
-import { PlaceAutocomplete } from '../PlaceAutocomplete';
-import { useGoogleAutocomplete } from '../useGoogleAutocomplete';
+import { i18nextInstance } from '../testUtil';
+import { PlaceAutocomplete } from '../src/PlaceAutocomplete';
+import { useGoogleAutocomplete } from '../src/useGoogleAutocomplete';
 
 // mocks
 jest.mock('../useGoogleAutocomplete', () => ({
@@ -35,9 +35,7 @@ describe('/GoogleMap/Placeautocomplete', () => {
             getDetails: jest.fn(() => Promise.resolve({})),
             status: { loading: false, success: true, error: false },
         };
-        (useGoogleAutocomplete as jest.Mock).mockImplementation(
-            () => mockGAPIHook
-        );
+        (useGoogleAutocomplete as jest.Mock).mockImplementation(() => mockGAPIHook);
         render(<PlaceAutocomplete data-testid="testing" />);
         expect(screen.getByTestId('testing')).toBeInTheDocument();
     });
@@ -56,9 +54,7 @@ describe('/GoogleMap/Placeautocomplete', () => {
             getDetails: jest.fn(() => ({ status: 'OK', result: {} })),
             status: { loading: false, success: true, error: false },
         };
-        (useGoogleAutocomplete as jest.Mock).mockImplementation(
-            () => mockGAPIHook
-        );
+        (useGoogleAutocomplete as jest.Mock).mockImplementation(() => mockGAPIHook);
         render(<PlaceAutocomplete />);
         const input = screen.getByRole('combobox');
         await act(async () => {
@@ -78,9 +74,7 @@ describe('/GoogleMap/Placeautocomplete', () => {
             getDetails: jest.fn(() => ({ status: 'OK', result: {} })),
             status: { loading: false, success: true, error: false },
         };
-        (useGoogleAutocomplete as jest.Mock).mockImplementation(
-            () => mockGAPIHook
-        );
+        (useGoogleAutocomplete as jest.Mock).mockImplementation(() => mockGAPIHook);
         render(<PlaceAutocomplete />);
         const input = screen.getByRole('combobox');
         await act(async () => {
@@ -100,9 +94,7 @@ describe('/GoogleMap/Placeautocomplete', () => {
             getDetails: jest.fn(() => ({ status: 'OK', result: {} })),
             status: { loading: true, success: false, error: false },
         };
-        (useGoogleAutocomplete as jest.Mock).mockImplementation(
-            () => mockGAPIHook
-        );
+        (useGoogleAutocomplete as jest.Mock).mockImplementation(() => mockGAPIHook);
         render(<PlaceAutocomplete />);
         const input = screen.getByRole('combobox');
         expect(input).toBeDisabled();
@@ -117,9 +109,7 @@ describe('/GoogleMap/Placeautocomplete', () => {
             getDetails: jest.fn(() => ({ status: 'OK', result: {} })),
             status: { loading: false, success: false, error: true },
         };
-        (useGoogleAutocomplete as jest.Mock).mockImplementation(
-            () => mockGAPIHook
-        );
+        (useGoogleAutocomplete as jest.Mock).mockImplementation(() => mockGAPIHook);
         render(<PlaceAutocomplete />);
         const input = screen.getByRole('combobox');
         expect(input).toBeDisabled();

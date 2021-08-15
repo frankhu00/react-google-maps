@@ -11,4 +11,5 @@ export { Direction } from './Direction';
 export { useGoogleAutocomplete } from './useGoogleAutocomplete';
 export { useGoogleDirections } from './useGoogleDirections';
 export { GeoService } from './geo.service';
+export { PlaceAutocomplete } from './PlaceAutocomplete';
 export * from './types';
