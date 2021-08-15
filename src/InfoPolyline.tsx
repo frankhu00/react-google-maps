@@ -19,13 +19,9 @@ export const InfoPolyline = ({
     map,
     events,
     children,
-    infowindowOpts,
-    shouldFocus,
+    infowindowProps = {},
     options,
-    showOnMount,
-    anchor,
     onMount,
-    onInfowindowMount,
 }: InfoPolylineProps): JSX.Element => {
     const instancesStore = useGoogleMap();
 
@@ -38,15 +34,7 @@ export const InfoPolyline = ({
     }, [instancesStore]);
 
     return (
-        <InfoWindow
-            id={id}
-            content={children}
-            map={map}
-            options={infowindowOpts}
-            showOnMount={showOnMount}
-            anchor={anchor}
-            onMount={onInfowindowMount}
-        >
+        <InfoWindow id={id} content={children} map={map} {...infowindowProps}>
             {({ infowindow }) => (
                 <Polyline
                     id={id}
@@ -68,7 +56,7 @@ export const InfoPolyline = ({
                             infowindow?.setPosition(e.latLng);
                             infowindow?.open({
                                 map: ctx.map,
-                                shouldFocus,
+                                shouldFocus: infowindowProps.shouldFocus,
                             });
                         },
                     }}

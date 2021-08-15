@@ -19,13 +19,9 @@ export const InfoMarker = ({
     map,
     events,
     children,
-    infowindowOpts,
-    shouldFocus,
     options,
-    showOnMount,
-    anchor,
     onMount,
-    onInfowindowMount,
+    infowindowProps = {},
 }: InfoMarkerProps): JSX.Element => {
     const instancesStore = useGoogleMap();
 
@@ -38,15 +34,7 @@ export const InfoMarker = ({
     }, [instancesStore]);
 
     return (
-        <InfoWindow
-            id={id}
-            content={children}
-            map={map}
-            options={infowindowOpts}
-            showOnMount={showOnMount}
-            anchor={anchor}
-            onMount={onInfowindowMount}
-        >
+        <InfoWindow id={id} content={children} map={map} {...infowindowProps}>
             {({ infowindow }) => (
                 <Marker
                     id={id}
@@ -68,7 +56,7 @@ export const InfoMarker = ({
                             infowindow?.open({
                                 anchor: ctx.marker,
                                 map: ctx.map,
-                                shouldFocus,
+                                shouldFocus: infowindowProps.shouldFocus,
                             });
                         },
                     }}

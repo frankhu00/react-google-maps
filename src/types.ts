@@ -129,12 +129,8 @@ export interface InfoWindowProps extends Pick<MapObjectProps, 'id' | 'map'> {
 
 /** InfoMarker types */
 export interface InfoMarkerProps extends MarkerProps {
-    infowindowOpts?: google.maps.InfoWindowOptions;
     children: IWRenderPropFn | JSX.Element;
-    shouldFocus?: boolean;
-    showOnMount?: boolean;
-    anchor?: google.maps.MVCObject;
-    onInfowindowMount?: (context: MapObjectContext) => void;
+    infowindowProps?: Omit<InfoWindowProps, 'children' | 'content'>;
 }
 
 /** AutoComplete types */
@@ -212,10 +208,6 @@ export interface PolylineProps extends MapObjectProps {
 }
 
 export interface InfoPolylineProps extends PolylineProps {
-    infowindowOpts?: google.maps.InfoWindowOptions;
     children: IWRenderPropFn | JSX.Element;
-    shouldFocus?: boolean;
-    showOnMount?: boolean;
-    anchor?: google.maps.MVCObject;
-    onInfowindowMount?: (context: MapObjectContext) => void;
+    infowindowProps?: Omit<InfoWindowProps, 'children' | 'content'>;
 }

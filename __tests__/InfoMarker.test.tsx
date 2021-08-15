@@ -64,7 +64,13 @@ describe('/GoogleMap/InfoMarker.tsx', () => {
         test('renders with infoWindow shown on mount', () => {
             const map = new window.google.maps.Map();
             render(
-                <InfoMarker map={map} showOnMount anchor={{} as google.maps.MVCObject}>
+                <InfoMarker
+                    map={map}
+                    infowindowProps={{
+                        showOnMount: true,
+                        anchor: {} as google.maps.MVCObject,
+                    }}
+                >
                     <div data-testid={testId}>Info window content</div>
                 </InfoMarker>
             );
