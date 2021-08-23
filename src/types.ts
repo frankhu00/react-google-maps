@@ -116,7 +116,7 @@ export interface MarkerProps extends MapObjectProps {
  */
 type IWRenderPropFn = (ctx: MapObjectContext) => JSX.Element;
 
-export interface InfoWindowProps extends Pick<MapObjectProps, 'id' | 'map'> {
+export interface InfoWindowProps extends Omit<MapObjectProps, 'infowindow' | 'events'> {
     anchor?: google.maps.MVCObject;
     shouldFocus?: boolean;
     showOnMount?: boolean;

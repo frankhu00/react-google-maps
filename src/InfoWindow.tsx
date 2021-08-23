@@ -15,23 +15,25 @@ export const InfoWindow = ({
     options,
     content,
     onMount,
+    onUnmount,
     children,
     Provider = Fragment,
 }: InfoWindowProps): JSX.Element | null => {
-    const infowindow = google ? new google.maps.InfoWindow(options) : null;
+    const infowindow = google ? new google.maps.InfoWindow(options) : undefined;
 
     /* istanbul ignore next */
     const { infowindowInstances } = useContext(MapInstanceSetter) || {
         infowindowInstances: dummyMapInstanceSetter.infowindowInstances,
     };
 
+    const context: MapObjectContext = {
+        id,
+        map,
+        infowindow,
+    };
+
     useEffect(() => {
         if (infowindow) {
-            const context: MapObjectContext = {
-                id,
-                map,
-                infowindow,
-            };
             const container = document.createElement('div');
 
             ReactDOM.render(
@@ -51,6 +53,7 @@ export const InfoWindow = ({
         }
 
         return () => {
+            onUnmount?.(context);
             infowindow?.close();
             infowindowInstances.remove(id);
         };
