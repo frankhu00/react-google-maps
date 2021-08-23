@@ -31,8 +31,8 @@ export const Marker = ({
     const extendMapBoundary = () => {
         const mapBoundary = map?.getBounds();
         const markerBoundary = marker?.getPosition();
-        if (markerBoundary) {
-            const bounds = mapBoundary?.extend(markerBoundary);
+        if (markerBoundary && mapBoundary && !mapBoundary.contains(markerBoundary)) {
+            const bounds = mapBoundary.extend(markerBoundary);
             if (bounds) {
                 map?.fitBounds(bounds);
             }
