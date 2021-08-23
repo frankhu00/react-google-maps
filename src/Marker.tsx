@@ -28,6 +28,17 @@ export const Marker = ({
         infowindow,
     };
 
+    const extendMapBoundary = () => {
+        const mapBoundary = map?.getBounds();
+        const markerBoundary = marker?.getPosition();
+        if (markerBoundary) {
+            const bounds = mapBoundary?.extend(markerBoundary);
+            if (bounds) {
+                map?.fitBounds(bounds);
+            }
+        }
+    };
+
     useEffect(() => {
         if (marker && map) {
             marker.setMap(map);
@@ -48,11 +59,14 @@ export const Marker = ({
             }
 
             if (extendMapBounds) {
-                const mapBoundary = map.getBounds();
-                const markerBoundary = marker.getPosition();
-                if (markerBoundary) {
-                    mapBoundary?.extend(markerBoundary);
-                }
+                const mapBoundListener = google.maps.event.addListener(
+                    map,
+                    'bounds_changed',
+                    () => {
+                        extendMapBoundary();
+                        google.maps.event.removeListener(mapBoundListener);
+                    }
+                );
             }
         }
 
