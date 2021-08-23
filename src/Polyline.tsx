@@ -9,9 +9,10 @@ export const Polyline = ({
     options,
     events,
     onMount,
+    onUnmount,
     infowindow,
 }: PolylineProps): null => {
-    const polyline = google ? new google.maps.Polyline(options) : null;
+    const polyline = google ? new google.maps.Polyline(options) : undefined;
     let boundedEventListeners: google.maps.MapsEventListener[] = [];
 
     /* istanbul ignore next */
@@ -19,16 +20,18 @@ export const Polyline = ({
         polylineInstances: dummyMapInstanceSetter.polylineInstances,
     };
 
+    const context: MapObjectContext = {
+        map,
+        polyline,
+        id,
+        infowindow,
+    };
+
     useEffect(() => {
         if (polyline && map) {
             polyline.setMap(map);
             polylineInstances.add(id, polyline);
-            const context: MapObjectContext = {
-                map,
-                polyline,
-                id,
-                infowindow,
-            };
+
             onMount?.(context);
             if (events) {
                 boundedEventListeners = Object.entries(events).map(
@@ -45,6 +48,7 @@ export const Polyline = ({
         }
 
         return () => {
+            onUnmount?.(context);
             if (boundedEventListeners.length > 0) {
                 boundedEventListeners.forEach((listener: google.maps.MapsEventListener) => {
                     google.maps.event.removeListener(listener);

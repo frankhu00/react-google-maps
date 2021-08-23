@@ -19,9 +19,8 @@ export const InfoMarker = ({
     map,
     events,
     children,
-    options,
-    onMount,
     infowindowProps = {},
+    ...props
 }: InfoMarkerProps): JSX.Element => {
     const instancesStore = useGoogleMap();
 
@@ -39,7 +38,7 @@ export const InfoMarker = ({
                 <Marker
                     id={id}
                     map={map}
-                    options={options}
+                    {...props}
                     infowindow={infowindow}
                     events={{
                         ...events,
@@ -60,7 +59,6 @@ export const InfoMarker = ({
                             });
                         },
                     }}
-                    onMount={onMount}
                 />
             )}
         </InfoWindow>

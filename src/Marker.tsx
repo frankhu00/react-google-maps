@@ -9,9 +9,11 @@ export const Marker = ({
     options,
     events,
     onMount,
+    onUnmount,
     infowindow,
+    extendMapBounds = false,
 }: MarkerProps): null => {
-    const marker = google ? new google.maps.Marker(options) : null;
+    const marker = google ? new google.maps.Marker(options) : undefined;
     let boundedEventListeners: google.maps.MapsEventListener[] = [];
 
     /* istanbul ignore next */
@@ -19,16 +21,18 @@ export const Marker = ({
         markerInstances: dummyMapInstanceSetter.markerInstances,
     };
 
+    const context: MapObjectContext = {
+        map,
+        marker,
+        id,
+        infowindow,
+    };
+
     useEffect(() => {
         if (marker && map) {
             marker.setMap(map);
             markerInstances.add(id, marker);
-            const context: MapObjectContext = {
-                map,
-                marker,
-                id,
-                infowindow,
-            };
+
             onMount?.(context);
             if (events) {
                 boundedEventListeners = Object.entries(events).map(
@@ -42,9 +46,18 @@ export const Marker = ({
                         )
                 );
             }
+
+            if (extendMapBounds) {
+                const mapBoundary = map.getBounds();
+                const markerBoundary = marker.getPosition();
+                if (markerBoundary) {
+                    mapBoundary?.extend(markerBoundary);
+                }
+            }
         }
 
         return () => {
+            onUnmount?.(context);
             if (boundedEventListeners.length > 0) {
                 boundedEventListeners.forEach((listener: google.maps.MapsEventListener) => {
                     google.maps.event.removeListener(listener);

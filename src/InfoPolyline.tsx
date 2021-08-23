@@ -20,8 +20,7 @@ export const InfoPolyline = ({
     events,
     children,
     infowindowProps = {},
-    options,
-    onMount,
+    ...props
 }: InfoPolylineProps): JSX.Element => {
     const instancesStore = useGoogleMap();
 
@@ -39,7 +38,7 @@ export const InfoPolyline = ({
                 <Polyline
                     id={id}
                     map={map}
-                    options={options}
+                    {...props}
                     infowindow={infowindow}
                     events={{
                         ...events,
@@ -60,7 +59,6 @@ export const InfoPolyline = ({
                             });
                         },
                     }}
-                    onMount={onMount}
                 />
             )}
         </InfoWindow>

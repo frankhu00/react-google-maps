@@ -76,18 +76,6 @@ export interface MapObjectContext {
     directionsRenderer?: google.maps.DirectionsRenderer;
 }
 
-interface MapObjectProps {
-    id?: string;
-    map?: google.maps.Map;
-    infowindow?: google.maps.InfoWindow;
-}
-
-/**
- * Marker types
- */
-
-export type MapEventHandler = (event: google.maps.MapMouseEvent, context: MapObjectContext) => void;
-
 export type GoogleMapObjectEventBinders = {
     [key in
         | 'click'
@@ -99,10 +87,25 @@ export type GoogleMapObjectEventBinders = {
         | 'mouseup'
         | 'recenter']?: MapEventHandler;
 };
+
+interface MapObjectProps {
+    id?: string;
+    map?: google.maps.Map;
+    infowindow?: google.maps.InfoWindow;
+    onMount?: (context: MapObjectContext) => void;
+    onUnmount?: (context: MapObjectContext) => void;
+    events?: GoogleMapObjectEventBinders;
+}
+
+/**
+ * Marker types
+ */
+
+export type MapEventHandler = (event: google.maps.MapMouseEvent, context: MapObjectContext) => void;
+
 export interface MarkerProps extends MapObjectProps {
     options?: google.maps.MarkerOptions;
-    events?: GoogleMapObjectEventBinders;
-    onMount?: (context: MapObjectContext) => void;
+    extendMapBounds?: boolean;
 }
 /**
  * End Marker types
@@ -120,7 +123,6 @@ export interface InfoWindowProps extends Pick<MapObjectProps, 'id' | 'map'> {
     options?: google.maps.InfoWindowOptions;
     content: IWRenderPropFn | JSX.Element;
     children?: IWRenderPropFn | JSX.Element;
-    onMount?: (context: MapObjectContext) => void;
     Provider?: React.FC;
 }
 /**
@@ -203,8 +205,6 @@ export interface PlaceDetailsResponse {
 
 export interface PolylineProps extends MapObjectProps {
     options?: google.maps.PolylineOptions;
-    onMount?: (context: MapObjectContext) => void;
-    events?: GoogleMapObjectEventBinders;
 }
 
 export interface InfoPolylineProps extends PolylineProps {
