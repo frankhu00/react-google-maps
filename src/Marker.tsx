@@ -59,14 +59,20 @@ export const Marker = ({
             }
 
             if (extendMapBounds) {
-                const mapBoundListener = google.maps.event.addListener(
-                    map,
-                    'bounds_changed',
-                    () => {
-                        extendMapBoundary();
-                        google.maps.event.removeListener(mapBoundListener);
-                    }
-                );
+                const mapBoundary = map?.getBounds();
+                if (mapBoundary) {
+                    extendMapBoundary();
+                } else {
+                    // When map first loads
+                    const mapBoundListener = google.maps.event.addListener(
+                        map,
+                        'bounds_changed',
+                        () => {
+                            extendMapBoundary();
+                            google.maps.event.removeListener(mapBoundListener);
+                        }
+                    );
+                }
             }
         }
 
