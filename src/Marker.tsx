@@ -1,7 +1,18 @@
 import React, { useEffect, useContext } from 'react';
 import { v4 as uuid } from 'uuid';
 import { MarkerProps, MapEventHandler, MapObjectContext } from './types';
-import { MapInstanceSetter, dummyMapInstanceSetter } from './MapProvider';
+import { MapInstanceSetter, dummyMapInstanceSetter, useGoogleMap } from './MapProvider';
+
+const extendMapBoundary = (
+    initialBounds: google.maps.LatLngBounds,
+    point: google.maps.LatLng
+): google.maps.LatLngBounds => {
+    initialBounds;
+    if (!initialBounds.contains(point)) {
+        initialBounds.extend(point);
+    }
+    return initialBounds;
+};
 
 export const Marker = ({
     id = uuid(),
@@ -11,6 +22,7 @@ export const Marker = ({
     onMount,
     onUnmount,
     infowindow,
+    autoFitMapBounds = false,
     extendMapBounds = false,
 }: MarkerProps): null => {
     const marker = google ? new google.maps.Marker(options) : undefined;
@@ -21,22 +33,13 @@ export const Marker = ({
         markerInstances: dummyMapInstanceSetter.markerInstances,
     };
 
+    const MapContext = useGoogleMap();
+
     const context: MapObjectContext = {
         map,
         marker,
         id,
         infowindow,
-    };
-
-    const extendMapBoundary = () => {
-        const mapBoundary = map?.getBounds();
-        const markerBoundary = marker?.getPosition();
-        if (markerBoundary && mapBoundary && !mapBoundary.contains(markerBoundary)) {
-            const bounds = mapBoundary.extend(markerBoundary);
-            if (bounds) {
-                map?.fitBounds(bounds);
-            }
-        }
     };
 
     useEffect(() => {
@@ -58,18 +61,42 @@ export const Marker = ({
                 );
             }
 
-            if (extendMapBounds) {
+            if (autoFitMapBounds === true && extendMapBounds === true) {
+                console.warn(
+                    'autoFitMapBounds and extendMapBounds can not be used together! autoFitMapBounds will be prioritized'
+                );
+            }
+
+            if (autoFitMapBounds) {
+                if (MapContext.map) {
+                    let bounds = new google.maps.LatLngBounds();
+                    for (const markerId in MapContext.markers) {
+                        const point = MapContext.markers[markerId].getPosition();
+                        if (point) {
+                            bounds = extendMapBoundary(bounds, point);
+                        }
+                    }
+                    map.fitBounds(bounds);
+                } else {
+                    console.warn('Marker autoFitMapBounds requires MapProvider context!');
+                }
+            } else if (extendMapBounds) {
                 const mapBoundary = map?.getBounds();
-                if (mapBoundary) {
-                    extendMapBoundary();
+                const point = marker.getPosition();
+                if (mapBoundary && point) {
+                    map.fitBounds(extendMapBoundary(mapBoundary, point));
                 } else {
                     // When map first loads
                     const mapBoundListener = google.maps.event.addListener(
                         map,
                         'bounds_changed',
                         () => {
-                            extendMapBoundary();
-                            google.maps.event.removeListener(mapBoundListener);
+                            const bc_mapBoundary = map.getBounds();
+                            const bc_point = marker.getPosition();
+                            if (bc_mapBoundary && bc_point) {
+                                map.fitBounds(extendMapBoundary(bc_mapBoundary, bc_point));
+                                google.maps.event.removeListener(mapBoundListener);
+                            }
                         }
                     );
                 }

@@ -105,6 +105,7 @@ export type MapEventHandler = (event: google.maps.MapMouseEvent, context: MapObj
 
 export interface MarkerProps extends MapObjectProps {
     options?: google.maps.MarkerOptions;
+    autoFitMapBounds?: boolean;
     extendMapBounds?: boolean;
 }
 /**
@@ -139,7 +140,6 @@ export interface InfoMarkerProps extends MarkerProps {
 export interface PlaceAutocompleteDictionary {
     loading?: string;
     noService?: string;
-    placeholder?: string;
     serviceError?: string;
 }
 
@@ -152,6 +152,8 @@ export interface PlaceAutocompleteProps {
     onSelectFailed?: (status: google.maps.places.PlacesServiceStatus) => void;
     onClear?: () => void;
     onBlur?: () => void;
+    maskDisplayValue?: (option: AutocompleteOption) => string;
+    placeholder?: string;
     dictionary?: PlaceAutocompleteDictionary;
     pinFill?: string;
     pinActiveFill?: string;
@@ -159,7 +161,7 @@ export interface PlaceAutocompleteProps {
     [key: string]: any;
 }
 
-export interface AutocompleteOptions {
+export interface AutocompleteOption {
     id: string;
     label: string;
     value: string;

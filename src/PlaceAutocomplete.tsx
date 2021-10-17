@@ -8,7 +8,7 @@ import MapPinErrorIcon from './assets/PinError';
 import { useGoogleAutocomplete } from './useGoogleAutocomplete';
 import {
     AutocompleteInputState,
-    AutocompleteOptions,
+    AutocompleteOption,
     PlaceAutocompleteProps,
     PlaceAutocompleteDictionary,
     MapPinProps,
@@ -41,7 +41,6 @@ const defaultDictionary: Required<PlaceAutocompleteDictionary> = {
     loading: 'Loading Location Service',
     noService: 'No Location Service Available',
     serviceError: 'Location Service Errored',
-    placeholder: 'Enter Address',
 };
 
 /**
@@ -56,6 +55,16 @@ const defaultDictionary: Required<PlaceAutocompleteDictionary> = {
  * - `predictOptions`: options that conforms to google's [AutocompletionRequest interface](https://developers.google.com/maps/documentation/javascript/reference/places-autocomplete-service#AutocompletionRequest).
  *   Please note that the `sessionToken` is automatically taken care of
  * - `placeDetailFields`: determines what details for the selected place to get. This defaults to only get the "geometry" field. See ["fields" property of PlaceDetailsRequest](https://developers.google.com/maps/documentation/javascript/reference/places-service#PlaceDetailsRequest)
+ * - `maskDisplayValue`: function used to mask the display value of the `PlaceAutocomplete` once a location is selected. Function signature is `(option: AutoCompleteOption) => string`
+ * - `dictionary`: An object for texts used in `PlaceAutocomplete`. Pass your translations here.
+ *
+ * ```javascript
+ * const PlaceAutocompleteDictionary = {
+ *   loading: 'Loading Location Service',
+ *   noService: 'No Location Service Available',
+ *   serviceError: 'Location Service Errored',
+ * };
+ * ```
  *
  * @param props : PlaceAutocompleteProps
  * @returns JSX.Element
@@ -69,10 +78,12 @@ export const PlaceAutocomplete = ({
     onSelectFailed,
     onClear,
     onBlur,
+    maskDisplayValue,
     pinFill,
     pinActiveFill,
     pinErrorFill,
     dictionary,
+    placeholder = 'Enter Address',
     ...props
 }: PlaceAutocompleteProps): JSX.Element => {
     const {
@@ -85,7 +96,7 @@ export const PlaceAutocomplete = ({
 
     const [inputState, setInputState] = useState<AutocompleteInputState>(initialInputState);
 
-    const [options, setOptions] = useState<AutocompleteOptions[]>([]);
+    const [options, setOptions] = useState<AutocompleteOption[]>([]);
     const onChangeHandler = async (input: string) => {
         setInputState(() =>
             input
@@ -103,7 +114,7 @@ export const PlaceAutocomplete = ({
                 const response = await predict(input, predictOptions);
                 if (response && response.predictions.length > 0) {
                     const opts = response.predictions.map(
-                        (p: google.maps.places.AutocompletePrediction): AutocompleteOptions => ({
+                        (p: google.maps.places.AutocompletePrediction): AutocompleteOption => ({
                             id: p.place_id,
                             label: p.description,
                             value: p.description,
@@ -137,17 +148,14 @@ export const PlaceAutocomplete = ({
     const onSelectHandler = async (_: string, opt: unknown) =>
         /* couldn't test since I can't get RTL to trigger onSelect by mouse click or keyboard event  */
         {
-            const option = opt as AutocompleteOptions;
+            const option = opt as AutocompleteOption;
             setInputState(() => ({
-                value: option.label,
+                value: maskDisplayValue ? maskDisplayValue(option) : option.label,
                 loading: true,
                 valid: true,
             }));
 
-            const response = await getDetails(
-                (option as AutocompleteOptions).id,
-                placeDetailFields
-            );
+            const response = await getDetails((option as AutocompleteOption).id, placeDetailFields);
 
             if (response.status === 'OK' && response.result) {
                 onSelect?.(response.result);
@@ -184,7 +192,7 @@ export const PlaceAutocomplete = ({
     };
 
     const determinePlaceholder = (): string =>
-        loading ? diction.loading : error ? diction.noService : diction.placeholder;
+        loading ? diction.loading : error ? diction.noService : placeholder;
 
     return (
         <AutoComplete
