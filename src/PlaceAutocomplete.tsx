@@ -84,7 +84,8 @@ export const PlaceAutocomplete = ({
     pinErrorFill,
     dictionary,
     placeholder = 'Enter Address',
-    ...props
+    autocompleteProps,
+    inputProps,
 }: PlaceAutocompleteProps): JSX.Element => {
     const {
         status: { loading, error, success },
@@ -197,7 +198,7 @@ export const PlaceAutocomplete = ({
     return (
         <AutoComplete
             allowClear={true}
-            {...props}
+            {...autocompleteProps}
             options={options}
             disabled={!success}
             onSelect={onSelectHandler}
@@ -208,6 +209,7 @@ export const PlaceAutocomplete = ({
         >
             <Input
                 size="large"
+                {...inputProps}
                 placeholder={determinePlaceholder()}
                 prefix={
                     loading || inputState.loading ? (

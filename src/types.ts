@@ -1,4 +1,5 @@
 import React, { Dispatch } from 'react';
+import { AutoCompleteProps, InputProps } from 'antd';
 
 export interface GoogleApiOptions {
     libraries?: string[];
@@ -158,7 +159,8 @@ export interface PlaceAutocompleteProps {
     pinFill?: string;
     pinActiveFill?: string;
     pinErrorFill?: string;
-    [key: string]: any;
+    autocompleteProps?: AutoCompleteProps;
+    inputProps: InputProps;
 }
 
 export interface AutocompleteOption {
