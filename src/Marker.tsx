@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import { v4 as uuid } from 'uuid';
 import { MarkerProps, MapEventHandler, MapObjectContext } from './types';
-import { MapInstanceSetter, dummyMapInstanceSetter, useGoogleMap } from './MapProvider';
+import { MapInstanceSetter, dummyMapInstanceSetter } from './MapProvider';
 
 const extendMapBoundary = (
     initialBounds: google.maps.LatLngBounds,
@@ -22,7 +22,6 @@ export const Marker = ({
     onMount,
     onUnmount,
     infowindow,
-    autoFitMapBounds = false,
     extendMapBounds = false,
 }: MarkerProps): null => {
     const marker = google ? new google.maps.Marker(options) : undefined;
@@ -32,8 +31,6 @@ export const Marker = ({
     const { markerInstances } = useContext(MapInstanceSetter) || {
         markerInstances: dummyMapInstanceSetter.markerInstances,
     };
-
-    const MapContext = useGoogleMap();
 
     const context: MapObjectContext = {
         map,
@@ -61,26 +58,7 @@ export const Marker = ({
                 );
             }
 
-            if (autoFitMapBounds === true && extendMapBounds === true) {
-                console.warn(
-                    'autoFitMapBounds and extendMapBounds can not be used together! autoFitMapBounds will be prioritized'
-                );
-            }
-
-            if (autoFitMapBounds) {
-                if (MapContext.map) {
-                    let bounds = new google.maps.LatLngBounds();
-                    for (const markerId in MapContext.markers) {
-                        const point = MapContext.markers[markerId].getPosition();
-                        if (point) {
-                            bounds = extendMapBoundary(bounds, point);
-                        }
-                    }
-                    map.fitBounds(bounds);
-                } else {
-                    console.warn('Marker autoFitMapBounds requires MapProvider context!');
-                }
-            } else if (extendMapBounds) {
+            if (extendMapBounds) {
                 const mapBoundary = map?.getBounds();
                 const point = marker.getPosition();
                 if (mapBoundary && point) {

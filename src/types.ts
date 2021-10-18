@@ -106,7 +106,6 @@ export type MapEventHandler = (event: google.maps.MapMouseEvent, context: MapObj
 
 export interface MarkerProps extends MapObjectProps {
     options?: google.maps.MarkerOptions;
-    autoFitMapBounds?: boolean;
     extendMapBounds?: boolean;
 }
 /**
