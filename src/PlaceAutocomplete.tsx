@@ -133,7 +133,10 @@ export const PlaceAutocomplete = ({
                 }
             } catch (e) {
                 // Case when api failed
-                message.error(diction.noService);
+                message.error({
+                    key: 'NoServiceAvailable',
+                    content: diction.noService,
+                });
                 setInputState((prev) => ({
                     ...prev,
                     valid: false,
@@ -168,7 +171,10 @@ export const PlaceAutocomplete = ({
             } else {
                 onSelect?.(null);
                 onSelectFailed?.(response.status);
-                message.error(diction.serviceError);
+                message.error({
+                    key: 'ServiceError',
+                    content: diction.serviceError,
+                });
                 setOptions([]);
                 setInputState((prev) => ({
                     ...prev,
