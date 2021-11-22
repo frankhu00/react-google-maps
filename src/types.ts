@@ -89,6 +89,15 @@ export type GoogleMapObjectEventBinders = {
         | 'recenter']?: MapEventHandler;
 };
 
+export type GoogleMapInfoWindowEventBinders = {
+    [key in
+        | 'closeclick'
+        | 'content_changed'
+        | 'domready'
+        | 'position_changed'
+        | 'zindex_changed']?: MapEventHandler;
+};
+
 interface MapObjectProps {
     id?: string;
     map?: google.maps.Map;
@@ -125,6 +134,7 @@ export interface InfoWindowProps extends Omit<MapObjectProps, 'infowindow' | 'ev
     content: IWRenderPropFn | JSX.Element;
     children?: IWRenderPropFn | JSX.Element;
     Provider?: React.FC;
+    events?: GoogleMapInfoWindowEventBinders;
 }
 /**
  * End InfoWindow types

@@ -4,12 +4,13 @@ import ReactDOM from 'react-dom';
 import { v4 as uuid } from 'uuid';
 
 import { MapInstanceSetter, dummyMapInstanceSetter } from './MapProvider';
-import { InfoWindowProps, MapObjectContext } from './types';
+import { InfoWindowProps, MapEventHandler, MapObjectContext } from './types';
 
 export const InfoWindow = ({
     id = uuid(),
     map,
     anchor,
+    events,
     shouldFocus,
     showOnMount,
     options,
@@ -20,6 +21,7 @@ export const InfoWindow = ({
     Provider = Fragment,
 }: InfoWindowProps): JSX.Element | null => {
     const infowindow = google ? new google.maps.InfoWindow(options) : undefined;
+    let boundedEventListeners: google.maps.MapsEventListener[] = [];
 
     /* istanbul ignore next */
     const { infowindowInstances } = useContext(MapInstanceSetter) || {
@@ -41,6 +43,19 @@ export const InfoWindow = ({
                 container
             );
             onMount?.(context);
+            if (events) {
+                boundedEventListeners = Object.entries(events).map(
+                    (event: [string, MapEventHandler]) =>
+                        infowindow.addListener(
+                            event[0],
+                            /* istanbul ignore next */
+                            (e: google.maps.MapMouseEvent) => {
+                                event[1](e, context);
+                            }
+                        )
+                );
+            }
+
             infowindowInstances.add(id, infowindow);
             infowindow.setContent(container);
             if (showOnMount) {
@@ -50,10 +65,17 @@ export const InfoWindow = ({
                     infowindow.open({ anchor, map, shouldFocus });
                 }
             }
+
+            infowindow.addListener('click', () => {});
         }
 
         return () => {
             onUnmount?.(context);
+            if (boundedEventListeners.length > 0) {
+                boundedEventListeners.forEach((listener: google.maps.MapsEventListener) => {
+                    google.maps.event.removeListener(listener);
+                });
+            }
             infowindow?.close();
             infowindowInstances.remove(id);
         };
