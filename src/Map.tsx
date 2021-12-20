@@ -88,6 +88,10 @@ const Map = ({
             return null;
         }
 
+        if (typeof children === 'function') {
+            return children(mapObj);
+        }
+
         /* istanbul ignore next */
         const elements = Array.isArray(children) ? children.flat() : children;
         return React.Children.map(elements, (child) => {

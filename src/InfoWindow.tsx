@@ -46,7 +46,7 @@ export const InfoWindow = ({
             if (events) {
                 boundedEventListeners = Object.entries(events).map(
                     (event: [string, MapEventHandler]) =>
-                        infowindow.addListener(
+                        infowindow?.addListener?.(
                             event[0],
                             /* istanbul ignore next */
                             (e: google.maps.MapMouseEvent) => {
@@ -66,7 +66,7 @@ export const InfoWindow = ({
                 }
             }
 
-            infowindow.addListener('click', () => {});
+            infowindow?.addListener?.('click', () => {});
         }
 
         return () => {

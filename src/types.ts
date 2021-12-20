@@ -42,7 +42,12 @@ export interface MapProps {
     onUserGeolocationSettled?: () => void;
     onMount?: (map: google.maps.Map) => void;
     onUnmount?: (map?: google.maps.Map) => void;
-    children?: JSX.Element | JSX.Element[] | (JSX.Element[] | JSX.Element | null)[] | null;
+    children?:
+        | ((map?: google.maps.Map) => JSX.Element)
+        | JSX.Element
+        | JSX.Element[]
+        | (JSX.Element[] | JSX.Element | null)[]
+        | null;
     [key: string]: any;
 }
 
@@ -169,7 +174,7 @@ export interface PlaceAutocompleteProps {
     pinActiveFill?: string;
     pinErrorFill?: string;
     autocompleteProps?: AutoCompleteProps;
-    inputProps: InputProps;
+    inputProps?: InputProps;
 }
 
 export interface AutocompleteOption {

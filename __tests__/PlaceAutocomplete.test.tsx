@@ -34,8 +34,8 @@ describe('/GoogleMap/Placeautocomplete', () => {
             status: { loading: false, success: true, error: false },
         };
         (useGoogleAutocomplete as jest.Mock).mockImplementation(() => mockGAPIHook);
-        render(<PlaceAutocomplete data-testid="testing" />);
-        expect(screen.getByTestId('testing')).toBeInTheDocument();
+        render(<PlaceAutocomplete />);
+        expect(screen.getByRole('combobox')).toBeInTheDocument();
     });
 
     test('flow: user types -> calls predict (with results) -> shows list', async () => {
