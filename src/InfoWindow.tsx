@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useEffect, useContext } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { v4 as uuid } from 'uuid';
 
 import { MapInstanceSetter, dummyMapInstanceSetter } from './MapProvider';
@@ -38,9 +38,9 @@ export const InfoWindow = ({
         if (infowindow) {
             const container = document.createElement('div');
 
-            ReactDOM.render(
-                <Provider>{typeof content === 'function' ? content(context) : content}</Provider>,
-                container
+            const root = createRoot(container);
+            root.render(
+                <Provider>{typeof content === 'function' ? content(context) : content}</Provider>
             );
             onMount?.(context);
             if (events) {

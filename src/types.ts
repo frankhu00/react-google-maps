@@ -32,7 +32,7 @@ export interface GAPILoaderProps {
     children?: JSX.Element | JSX.Element[];
 }
 
-export interface MapProps {
+export interface MapProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
     options?: google.maps.MapOptions;
     centerToUserLocation?: boolean;
     userGeolocation?: boolean;
@@ -48,7 +48,6 @@ export interface MapProps {
         | JSX.Element[]
         | (JSX.Element[] | JSX.Element | null)[]
         | null;
-    [key: string]: any;
 }
 
 type AddInstance<T> = (id: string, instance: T) => void;
@@ -138,7 +137,7 @@ export interface InfoWindowProps extends Omit<MapObjectProps, 'infowindow' | 'ev
     options?: google.maps.InfoWindowOptions;
     content: IWRenderPropFn | JSX.Element;
     children?: IWRenderPropFn | JSX.Element;
-    Provider?: React.FC;
+    Provider?: React.FC<any>;
     events?: GoogleMapInfoWindowEventBinders;
 }
 /**

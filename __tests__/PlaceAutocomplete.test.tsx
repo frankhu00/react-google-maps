@@ -56,7 +56,7 @@ describe('/GoogleMap/Placeautocomplete', () => {
         render(<PlaceAutocomplete />);
         const input = screen.getByRole('combobox');
         await act(async () => {
-            await userEvent.type(input, 'SureCo');
+            await userEvent.type(input, 'Test');
         });
         expect(mockGAPIHook.predict).toHaveBeenCalled();
         const option = screen.getByRole('option');
@@ -76,7 +76,7 @@ describe('/GoogleMap/Placeautocomplete', () => {
         render(<PlaceAutocomplete />);
         const input = screen.getByRole('combobox');
         await act(async () => {
-            await userEvent.type(input, 'SureCo');
+            await userEvent.type(input, 'Test');
         });
         expect(mockGAPIHook.predict).toHaveBeenCalled();
         const dropdown = document.querySelector('.ant-select-dropdown');

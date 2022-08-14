@@ -1,6 +1,6 @@
 /* eslint @typescript-eslint/no-explicit-any: off */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { screen, render, cleanup } from '@testing-library/react';
 import { InfoWindow } from '../src/InfoWindow';
 
@@ -42,7 +42,7 @@ describe('/GoogleMap/InfoWindow.tsx', () => {
         });
 
         test('renders and closes on unmount', () => {
-            const spy = jest.spyOn(ReactDOM, 'render');
+            const spy = jest.spyOn(ReactDOM, 'createRoot');
             const { unmount } = render(<InfoWindow content={IWContent} />);
             expect(spy).toHaveBeenCalled();
             expect(iwSetContentMock).toHaveBeenCalled();

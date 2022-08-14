@@ -15,6 +15,7 @@
         "declaration": false,
         "noEmit": false,
         "isolatedModules": true,
+        "skipLibCheck": true,
         "lib": ["esnext", "dom", "dom.iterable"]
     },
     "include": ["./src/**/*.ts"]
